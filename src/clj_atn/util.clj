@@ -13,6 +13,9 @@
   (let [[head rest] (split-at len stream)]
     {:stream rest :val (reduce #(+ (* 256 %1) %2) head)}))
 
+(defn read-byte [stream]
+  {:stream (next stream) :val (first stream)})
+
 (def read-int-32 (partial read-int 4))
 
 (defn read-unicode-string [stream]
