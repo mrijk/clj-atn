@@ -1,4 +1,5 @@
-(ns clj-atn.util)
+(ns clj-atn.util
+  (:require [clojure.java.io :as io]))
 
 (defn read-bin-file
   "Read file as a byte array"
@@ -13,3 +14,10 @@
     {:stream rest :val (reduce #(+ (* 256 %1) %2) head)}))
 
 (def read-int-32 (partial read-int 4))
+
+(defn read-unicode-string [stream]
+  (let [{len :val rest :stream} (read-int-32 stream)
+        str (take (* 2 len) rest)
+        rev-str (flatten (map #(reverse %) (partition 2 str)))
+        utf16-str (String. (byte-array (map byte rev-str)))]
+    {:stream (drop (* 2 len) rest) :val utf16-str}))
