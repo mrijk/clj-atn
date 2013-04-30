@@ -1,4 +1,5 @@
 (ns clj-atn.util
+  (:import java.io.File)
   (:require [cheshire.core :refer :all])
   (:require [clojure.java.io :as io]))
 

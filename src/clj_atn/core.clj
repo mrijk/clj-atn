@@ -1,5 +1,4 @@
 (ns clj-atn.core
-  (:import java.io.File)
   (:use [clj-atn util]))
 
 (defn- parse-field
