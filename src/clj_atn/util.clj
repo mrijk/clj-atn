@@ -20,20 +20,31 @@
 (defn write-json [tree filename]
   (generate-stream tree (io/writer filename) {:pretty true}))
 
+(defn read-byte [stream]
+  {:stream (next stream) :val (first stream)})
+
 (defn- read-int [len stream]
   (let [[head rest] (split-at len stream)]
     {:stream rest :val (reduce #(+ (* 256 %1) %2) head)}))
-
-(defn read-byte [stream]
-  {:stream (next stream) :val (first stream)})
 
 (def read-int-16 (partial read-int 2))
 
 (def read-int-32 (partial read-int 4))
 
+(defn- seq-to-str [s]
+  (String. (byte-array s)))
+
 (defn read-unicode-string [stream]
   (let [{len :val rest :stream} (read-int-32 stream)
         str (take (* 2 len) rest)
         rev-str (flatten (map #(reverse %) (partition 2 str)))
-        utf16-str (String. (byte-array (map byte rev-str)))]
+        utf16-str (seq-to-str (map byte rev-str))]
     {:stream (drop (* 2 len) rest) :val utf16-str}))
+
+(defn read-four-byte-string [stream]
+  (let [[head rest] (split-at 4 stream)]
+    {:stream rest :val (seq-to-str head)}))
+
+(defn read-string [stream]
+  (let [{len :val rest :stream} (read-int-32 stream)]
+    {:stream (drop len rest) :val (seq-to-str (take len rest))}))
