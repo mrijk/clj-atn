@@ -1,6 +1,5 @@
 (ns clj-atn.core
   (:import java.io.File)
-  (:require [cheshire.core :refer :all])
   (:use [clj-atn util]))
 
 (defn- parse-field
@@ -71,14 +70,8 @@
   [filename]
   true)
 
-(defn- get-all-files [directory]
-  (map #(.getPath %) (filter #(.isFile %) (.listFiles (File. directory)))))
-
 (defn read-all-atns
   "Read all Photoshop action files in a given directory"
   [directory]
   (map read-atn (filter atn-file? (get-all-files directory))))
 
-; Fix me: filename should be default to name of actionfile
-(defn write-json [tree filename]
-  (generate-stream tree (clojure.java.io/writer filename) {:pretty true}))

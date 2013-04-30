@@ -1,13 +1,23 @@
 (ns clj-atn.util
+  (:require [cheshire.core :refer :all])
   (:require [clojure.java.io :as io]))
+
+(defn get-all-files
+  "Get all files in a directory"
+  [directory]
+  (map #(.getPath %) (filter #(.isFile %) (.listFiles (File. directory)))))
 
 (defn read-bin-file
   "Read file as a byte array"
   [filename]
-  (with-open [input (new java.io.FileInputStream filename) 
-              output (new java.io.ByteArrayOutputStream)]
+  (with-open [input (java.io.FileInputStream. filename) 
+              output (java.io.ByteArrayOutputStream.)]
     (io/copy input output)
     (.toByteArray output)))
+
+; Fix me: filename should be default to name of actionfile
+(defn write-json [tree filename]
+  (generate-stream tree (io/writer filename) {:pretty true}))
 
 (defn- read-int [len stream]
   (let [[head rest] (split-at len stream)]
