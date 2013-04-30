@@ -16,6 +16,8 @@
 (defn read-byte [stream]
   {:stream (next stream) :val (first stream)})
 
+(def read-int-16 (partial read-int 2))
+
 (def read-int-32 (partial read-int 4))
 
 (defn read-unicode-string [stream]
