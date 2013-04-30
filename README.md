@@ -14,6 +14,7 @@ clj-atn.core=> (write-json (read-atn "Fragment.atn") "/tmp/Fragment.json")
 
 Writes the following file contents:
 
+`
 {
     actions: [
         {
@@ -31,4 +32,4 @@ Writes the following file contents:
     set-name: "Fragment",
     version: 16,
     filename: "Fragment.atn"
-}
+}`
