@@ -26,20 +26,22 @@
 
 (defn parse
   "Parse the binary array"
-  [stream]
-  (let [header (version {:stream stream :tree {}})]
+  [filename stream]
+  (let [header (version {:stream stream :tree {:filename filename}})]
     (if (valid-version? (-> header :tree :version))
       (->
        header
        set-name
        expanded
        nr-actions
-       actions))))
+       actions)
+      header)))
 
 (defn read-atn
   "Read Photoshop action file and return map"
   [filename]
-  (-> filename read-bin-file parse :tree))
+  (:tree
+   (parse filename (read-bin-file filename))))
 
 (defn- atn-file?
   [filename]
