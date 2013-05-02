@@ -9,20 +9,22 @@
      :tree (assoc tree key val)}))
 
 (def version (partial parse-field :version read-int-32))
-(def set-name (partial parse-field :set-name read-unicode-string))
+(def set-name (partial parse-field :name read-unicode-string))
 (def expanded (partial parse-field :expanded read-byte))
 (def nr-actions (partial parse-field :nr-actions read-int-32))
 (def index (partial parse-field :index read-int-16))
 (def shift-key (partial parse-field :shift-key read-byte))
 (def command-key (partial parse-field :command-key read-byte))
 (def color-index (partial parse-field :color-index read-int-16))
-(def action-name (partial parse-field :action-name read-unicode-string))
+(def action-name (partial parse-field :name read-unicode-string))
 (def nr-action-events (partial parse-field :nr-action-events read-int-32))
 (def enabled (partial parse-field :enabled read-byte))
 (def with-dialog (partial parse-field :with-dialog read-byte))
 (def dialog-options (partial parse-field :dialog-options read-byte))
 (def text (partial parse-field :text read-four-byte-string))
-(def event-name (partial parse-field :event-name read-string))
+(def event-name (partial parse-field :name read-standard-string))
+(def event-display-name (partial parse-field :display-name read-standard-string))
+(def descriptor (partial parse-field :descriptor read-int-32))
 
 (defn- read-action-event [stream]
   (-> {:stream stream :tree {}}
@@ -31,7 +33,9 @@
       with-dialog
       dialog-options
       text
-      event-name))
+      event-name
+      event-display-name
+      descriptor))
 
 (defn- action-events [{:keys [stream tree]}]
   {:stream stream

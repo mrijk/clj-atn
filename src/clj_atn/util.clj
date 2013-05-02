@@ -45,6 +45,6 @@
   (let [[head rest] (split-at 4 stream)]
     {:stream rest :val (seq-to-str head)}))
 
-(defn read-string [stream]
+(defn read-standard-string [stream]
   (let [{len :val rest :stream} (read-int-32 stream)]
     {:stream (drop len rest) :val (seq-to-str (take len rest))}))
