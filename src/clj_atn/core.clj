@@ -25,6 +25,17 @@
 (def event-name (partial parse-field :name read-standard-string))
 (def event-display-name (partial parse-field :display-name read-standard-string))
 (def descriptor (partial parse-field :descriptor read-int-32))
+(def class-id (partial parse-field :class-id read-unicode-string))
+(def class-id2 (partial parse-field :class-id2 read-token-or-string))
+(def nr-items (partial parse-field :nr-items read-int-32))
+
+(defn- description [{:keys [stream tree] :as orig}]
+  (if (zero? (:descriptor tree))
+    orig
+    (-> orig
+        class-id
+        class-id2
+        nr-items)))
 
 (defn- read-action-event [stream]
   (-> {:stream stream :tree {}}
@@ -35,7 +46,8 @@
       text
       event-name
       event-display-name
-      descriptor))
+      descriptor
+      description))
 
 (defn- action-events [{:keys [stream tree]}]
   {:stream stream
